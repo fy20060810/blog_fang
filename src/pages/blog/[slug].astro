@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from "astro:content";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((p) => ({
+      params: { slug: p.id.replace(".md", "") },
+      props: { entry: p },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BlogPostLayout frontmatter={entry.data}>
+  <Content />
+</BlogPostLayout>

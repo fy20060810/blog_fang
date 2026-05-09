@@ -1,0 +1,48 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Comments from "../components/Comments.astro";
+
+interface Frontmatter {
+  title: string;
+  description?: string;
+  date: string;
+  tags?: string[];
+}
+
+const { frontmatter } = Astro.props;
+const { title, description, date, tags } = frontmatter as Frontmatter;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="py-8">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4">{title}</h1>
+      <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--color-text-secondary)]">
+        <time datetime={date}>
+          {new Date(date).toLocaleDateString("zh-CN", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </time>
+        {
+          tags && tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-full px-3 py-0.5 text-xs">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+
+  <Comments />
+</BaseLayout>

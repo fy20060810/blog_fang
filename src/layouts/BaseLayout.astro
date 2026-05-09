@@ -1,0 +1,55 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="preconnect"
+      href="https://cdn.jsdelivr.net"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/stylesheet.min.css"
+      rel="stylesheet"
+    />
+    <title>{title} | Fang's Blog</title>
+    <meta name="description" content={description || "Fang 的个人博客"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description || "Fang 的个人博客"} />
+    <meta property="og:type" content={ogImage ? "article" : "website"} />
+    <meta property="og:image" content={ogImage} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-1 w-full max-w-3xl mx-auto px-4 py-8 sm:px-6">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+<script is:inline>
+  const theme = (() => {
+    if (typeof localStorage !== "undefined") {
+      const stored = localStorage.getItem("theme");
+      if (stored) return stored;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  })();
+  document.documentElement.classList.toggle("dark", theme === "dark");
+</script>

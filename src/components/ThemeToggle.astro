@@ -1,0 +1,16 @@
+<button
+  id="theme-toggle"
+  class="p-1.5 rounded-md hover:bg-[var(--color-bg-card)] transition-colors"
+  aria-label="Toggle dark mode"
+>
+  <span class="dark:hidden">🌙</span>
+  <span class="hidden dark:inline">☀️</span>
+</button>
+
+<script is:inline>
+  const btn = document.getElementById("theme-toggle");
+  btn?.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  });
+</script>

@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-bg: #ffffff;
+  --color-bg-card: #f8fafc;
+  --color-text: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+}
+
+.dark {
+  --color-primary: #60a5fa;
+  --color-primary-dark: #3b82f6;
+  --color-bg: #0f172a;
+  --color-bg-card: #1e293b;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-border: #334155;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-200;
+  font-family: "Geist", "Noto Sans SC", system-ui, sans-serif;
+}
+
+/* Prose styles for blog posts */
+.prose {
+  @apply text-[var(--color-text)] leading-relaxed;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-bold mt-8 mb-4;
+}
+
+.prose h1 {
+  @apply text-3xl;
+}
+
+.prose h2 {
+  @apply text-2xl border-b border-[var(--color-border)] pb-2;
+}
+
+.prose h3 {
+  @apply text-xl;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose a {
+  @apply text-[var(--color-primary)] underline underline-offset-2 hover:text-[var(--color-primary-dark)];
+}
+
+.prose ul,
+.prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose li {
+  @apply mb-1;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-[var(--color-primary)] pl-4 my-4 italic text-[var(--color-text-secondary)];
+}
+
+.prose code {
+  @apply bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded px-1.5 py-0.5 text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-lg p-4 my-4 overflow-x-auto;
+}
+
+.prose pre code {
+  @apply bg-transparent border-0 p-0;
+}
+
+.prose img {
+  @apply rounded-lg max-w-full my-6;
+}
+
+.prose strong {
+  @apply font-bold;
+}
+
+.prose hr {
+  @apply border-[var(--color-border)] my-8;
+}

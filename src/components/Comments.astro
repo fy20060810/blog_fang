@@ -1,0 +1,72 @@
+<!-- Giscus comments - powered by GitHub Discussions -->
+<section class="mt-12 pt-8 border-t border-[var(--color-border)]">
+  <h2 class="text-xl font-bold mb-4">Comments</h2>
+
+  <!-- 替换下面的 repo 为你的 GitHub 仓库 -->
+  <p class="text-sm text-[var(--color-text-secondary)] mb-4">
+    Replace <code>your-username/your-repo</code> in
+    <code class="bg-[var(--color-bg-card)] rounded px-1 py-0.5">src/components/Comments.astro</code>
+    with your actual GitHub repository.
+  </p>
+
+  <div id="giscus-comments" class="mt-4"></div>
+</section>
+
+<script is:inline>
+  function loadGiscus() {
+    const theme =
+      document.documentElement.classList.contains("dark") ? "dark" : "light";
+
+    const existing = document.querySelector(".giscus");
+    if (existing) {
+      const iframe = document.querySelector(".giscus-frame");
+      if (iframe) {
+        iframe.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme } } },
+          "https://giscus.app"
+        );
+      }
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute("data-repo", "your-username/your-repo");
+    script.setAttribute("data-repo-id", "R_kgDOXXXXXX");
+    script.setAttribute("data-category", "Announcements");
+    script.setAttribute("data-category-id", "DIC_kwDOXXXXXX");
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "0");
+    script.setAttribute("data-input-position", "bottom");
+    script.setAttribute("data-theme", theme);
+    script.setAttribute("data-lang", "zh-CN");
+    script.crossOrigin = "anonymous";
+    script.async = true;
+    document.getElementById("giscus-comments")?.appendChild(script);
+  }
+
+  loadGiscus();
+
+  document.addEventListener("astro:page-load", loadGiscus);
+
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (
+        m.type === "attributes" &&
+        m.attributeName === "class"
+      ) {
+        const theme = document.documentElement.classList.contains("dark")
+          ? "dark"
+          : "light";
+        const iframe = document.querySelector(".giscus-frame") as HTMLIFrameElement | null;
+        iframe?.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme } } },
+          "https://giscus.app"
+        );
+      }
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true });
+</script>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogCard from "../components/BlogCard.astro";
+import Search from "../components/Search.astro";
+
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("posts");
+
+const sorted = posts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Home">
+  <section class="py-8">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Hi, I'm Fang 👋</h1>
+    <p class="text-[var(--color-text-secondary)] text-lg">
+      Welcome to my blog. I write about tech, life, and things I learn along the
+      way.
+    </p>
+  </section>
+
+  <Search />
+
+  <section class="mt-8">
+    <h2 class="text-xl font-bold mb-6">Recent Posts</h2>
+
+    {sorted.length === 0 && (
+      <div class="text-center py-16 text-[var(--color-text-secondary)]">
+        <p class="text-lg">No posts yet.</p>
+        <p class="mt-2 text-sm">
+          Create your first post: add a <code class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded px-1 py-0.5">.md</code> file
+          in <code class="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded px-1 py-0.5">src/pages/posts/</code>
+        </p>
+      </div>
+    )}
+
+    <div class="grid gap-4">
+      {sorted.map((post) => (
+        <BlogCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date.toISOString()}
+          slug={post.id.replace(".md", "")}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

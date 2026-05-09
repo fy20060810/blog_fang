@@ -1,0 +1,76 @@
+<!-- Pagefind search widget -->
+<div id="search" class="relative w-full">
+  <input
+    type="search"
+    id="search-input"
+    placeholder="Search posts..."
+    class="w-full px-4 py-2.5 border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-card)] text-[var(--color-text)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-shadow"
+  />
+  <div id="search-results" class="mt-4"></div>
+</div>
+
+<script is:inline>
+  async function initSearch() {
+    const input = document.getElementById("search-input") as HTMLInputElement | null;
+    const results = document.getElementById("search-results");
+    if (!input || !results) return;
+
+    // Load Pagefind on first focus
+    input.addEventListener(
+      "focus",
+      async () => {
+        await loadPagefind();
+      },
+      { once: true }
+    );
+
+    let pagefind: any = null;
+
+    async function loadPagefind() {
+      try {
+        const pf = await import("/pagefind/pagefind.js");
+        pagefind = pf;
+        await pagefind.init();
+      } catch {
+        results!.innerHTML =
+          '<p class="text-sm text-[var(--color-text-secondary)]">Search not available. Run <code class="bg-[var(--color-bg-card)] rounded px-1">npm run build</code> first to index content.</p>';
+      }
+    }
+
+    let timer: ReturnType<typeof setTimeout>;
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const query = input.value.trim();
+        if (!query) {
+          results.innerHTML = "";
+          return;
+        }
+        if (!pagefind) return;
+
+        const search = await pagefind.search(query);
+        if (!search || search.results.length === 0) {
+          results.innerHTML =
+            '<p class="text-sm text-[var(--color-text-secondary)] py-4">No results found.</p>';
+          return;
+        }
+
+        const items = await Promise.all(
+          search.results.slice(0, 8).map(async (r: any) => {
+            const data = await r.data();
+            return `
+              <a href="${data.url}" class="block border border-[var(--color-border)] rounded-lg p-4 hover:border-[var(--color-primary)] transition-colors">
+                <h3 class="font-medium mb-1">${data.meta?.title || data.url}</h3>
+                <p class="text-sm text-[var(--color-text-secondary)] line-clamp-2">${data.excerpt || ""}</p>
+              </a>
+            `;
+          })
+        );
+
+        results.innerHTML = `<div class="grid gap-3">${items.join("")}</div>`;
+      }, 300);
+    });
+  }
+
+  initSearch();
+</script>
